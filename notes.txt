@@ -11,3 +11,5 @@ docker run -d -p 8000:8080 -e AzureWebJobsStorage='[PUT CONNECTION STRING TO AZ 
 
 docker logs -f [DOCKER CONTAINER ID HERE]
 ```
+
+Test
