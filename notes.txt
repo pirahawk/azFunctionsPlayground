@@ -1,0 +1,13 @@
+https://arminreiter.com/2017/02/azure-functions-time-trigger-cron-cheat-sheet/
+https://medium.com/@luca.favorido/azure-functions-v3-in-docker-like-a-pro-64d68cb58478
+https://hub.docker.com/_/microsoft-azure-functions-dotnet?tab=reviews
+
+How to containerize:
+
+```
+docker build -t myfunctest:latest .
+
+docker run -d -p 8000:8080 -e AzureWebJobsStorage='[PUT CONNECTION STRING TO AZ BLOB STORAGE HERE]' --name timerFuncTest myfunctest:latest
+
+docker logs -f [DOCKER CONTAINER ID HERE]
+```
