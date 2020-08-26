@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using AzCosmosDb;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +28,11 @@ namespace AzFunctionsDomain
                 builder.AddConsole();
                 builder.AddDebug();
             });
+            
+            services.Configure<AzCosmosOptions>(context.Configuration.GetSection("AzCosmosOptions"));
             services.AddTransient<IMyService, MyService>();
+            services.AddSingleton<ICosmosClientFactory, CosmosClientFactory>();
+            services.AddTransient<IUserDtoReader, UserDtoReader>();
         }
 
         private void ConfigureApp(HostBuilderContext context, IConfigurationBuilder configuration)
@@ -40,6 +45,8 @@ namespace AzFunctionsDomain
             {
                 configuration.AddJsonFile(appSettings);
             }
+
+            configuration.AddEnvironmentVariables();
         }
 
         private string[] GetFilesWithExtension(string extension)

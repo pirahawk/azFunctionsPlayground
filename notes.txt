@@ -1,6 +1,8 @@
 https://arminreiter.com/2017/02/azure-functions-time-trigger-cron-cheat-sheet/
 https://medium.com/@luca.favorido/azure-functions-v3-in-docker-like-a-pro-64d68cb58478
 https://hub.docker.com/_/microsoft-azure-functions-dotnet?tab=reviews
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-dotnet-class-library#functions-class-library-project
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings
 
 How to containerize:
 
@@ -13,3 +15,28 @@ docker logs -f [DOCKER CONTAINER ID HERE]
 ```
 
 Test
+
+
+# How to remove the default "/api" route on HTTP triggers
+
+https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-http-webhook-trigger?tabs=csharp#customize-the-http-endpoint
+
+need to add the following to the host.json:
+```
+"extensions": {
+    "http": {
+      "routePrefix": ""  // removes the default "/api" route
+    }
+  }
+```
+
+#add custom routing
+
+just use the tried and tested asp dotnetcore mvc routes and will auto bind to method param to match like so
+
+```
+[FunctionName("AddUser")]
+        public static async Task<IActionResult> AddUser(
+            [HttpTrigger(AuthorizationLevel.Function, "get", Route = "/add/{id:guid}")] HttpRequest req,
+            ILogger log, Guid id) // note the ID
+```
