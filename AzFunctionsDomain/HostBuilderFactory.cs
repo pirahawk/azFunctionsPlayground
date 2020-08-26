@@ -11,6 +11,20 @@ namespace AzFunctionsDomain
 {
     public class HostBuilderFactory
     {
+        private static Lazy<IHost> _host = new Lazy<IHost>(() =>
+        {
+            var host = new HostBuilderFactory().BuildHost();
+            return host;
+        });
+
+        public static IHost Host
+        {
+            get
+            {
+                return _host.Value;
+            }
+        }
+
         public IHost BuildHost()
         {
             var hostBuilder = new HostBuilder();
@@ -39,11 +53,11 @@ namespace AzFunctionsDomain
         {
 
             var appSettings = GetFilesWithExtension("json")
-                .FirstOrDefault(file => Path.GetFileName(file.ToLower()).Equals("appsettings.json"));
+                .Where(file => Path.GetFileName(file.ToLower()).StartsWith("appsettings"));
 
-            if (!string.IsNullOrWhiteSpace(appSettings))
+            foreach (var appSetting in appSettings)
             {
-                configuration.AddJsonFile(appSettings);
+                configuration.AddJsonFile(appSetting);
             }
 
             configuration.AddEnvironmentVariables();

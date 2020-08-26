@@ -30,14 +30,10 @@ namespace azTimeTriggeredFunc
             //    ? (ActionResult)new OkObjectResult($"Hello, {name}")
             //    : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
 
-            var host = new HostBuilderFactory().BuildHost();
-            using (var scope = host.Services.CreateScope())
-            {
-                var userReader = scope.ServiceProvider.GetService<IUserDtoReader>();
-                var users = await userReader.GetUsers();
-
-                return new OkObjectResult(users) ;
-            }
+            using var scope = HostBuilderFactory.Host.Services.CreateScope();
+            var userReader = scope.ServiceProvider.GetService<IUserDtoReader>();
+            var users = await userReader.GetUsers();
+            return new OkObjectResult(users) ;
         }
 
         [FunctionName("AddUser")]
@@ -45,14 +41,11 @@ namespace azTimeTriggeredFunc
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "/add/{id:guid}")] HttpRequest req,
             ILogger log, Guid id)
         {
-            var host = new HostBuilderFactory().BuildHost();
-            using (var scope = host.Services.CreateScope())
-            {
-                var userReader = scope.ServiceProvider.GetService<IUserDtoReader>();
-                var users = await userReader.GetUsers();
+            using var scope = HostBuilderFactory.Host.Services.CreateScope();
+            var userReader = scope.ServiceProvider.GetService<IUserDtoReader>();
+            var users = await userReader.GetUsers();
 
-                return new OkObjectResult(users);
-            }
+            return new OkObjectResult(users);
         }
     }
 }

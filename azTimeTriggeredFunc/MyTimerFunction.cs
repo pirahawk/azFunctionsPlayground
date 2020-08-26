@@ -11,15 +11,11 @@ namespace azTimeTriggeredFunc
         [FunctionName("MyTimerFunction")]
         public static void Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer, ILogger log)
         {
-            var host = new HostBuilderFactory().BuildHost();
-
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            using (var scope = host.Services.CreateScope())
-            {
-                var myService = scope.ServiceProvider.GetService<IMyService>();
-                //var myService = ActivatorUtilities.CreateInstance<IMyService>(scope.ServiceProvider);
-                myService.DoSomething();
-            }
+            using var scope = HostBuilderFactory.Host.Services.CreateScope();
+            var myService = scope.ServiceProvider.GetService<IMyService>();
+            //var myService = ActivatorUtilities.CreateInstance<IMyService>(scope.ServiceProvider);
+            myService.DoSomething();
         }
     }
 }

@@ -12,6 +12,9 @@
     <ProjectReference Include="..\AzFunctionsDomain\AzFunctionsDomain.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="appsettings.cosmos.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
