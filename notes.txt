@@ -9,12 +9,20 @@ How to containerize:
 ```
 docker build -t myfunctest:latest .
 
-docker run -d -p 8000:8080 -e AzureWebJobsStorage='[PUT CONNECTION STRING TO AZ BLOB STORAGE HERE]' --name timerFuncTest myfunctest:latest
+docker run -d -p 8000:80 -e AzureWebJobsStorage='[AZ BLOB STORAGE CONN]' -e AzCosmosOptions:EndpointUrl='[AZ COSMOS ENDPOINT URL]' -e AzCosmosOptions:AuthorizationKey='[AZ COSMOS AUTH KEY]' -e AzCosmosOptions:DatabaseId='[AZ COSMOS DB ID]' -e AzCosmosOptions:ContainerId='[AZ COSMOS CONTAINER ID]' --name timerFuncTest myfunctest:latest
 
 docker logs -f [DOCKER CONTAINER ID HERE]
+docker exec -it [DOCKER CONTAINER ID HERE] /bin/sh
 ```
 
-Test
+# Test the container works
+
+Interstingly can test the runtime itself by calling the root endpoint
+```
+http://localhost:8000  // Should show the func runtime working
+http://localhost:8000/health  // Simple ping endpoin on the http trigger
+
+```
 
 
 # How to remove the default "/api" route on HTTP triggers
@@ -39,4 +47,18 @@ just use the tried and tested asp dotnetcore mvc routes and will auto bind to me
         public static async Task<IActionResult> AddUser(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "/add/{id:guid}")] HttpRequest req,
             ILogger log, Guid id) // note the ID
+```
+
+# HTTPTrigger func AuthorizationLevel
+
+Note the foll bit
+
+```
+[HttpTrigger(AuthorizationLevel.Function
+```
+
+Won't work inside of a docker container, need to set it to
+
+```
+[HttpTrigger(AuthorizationLevel.Anonymous
 ```

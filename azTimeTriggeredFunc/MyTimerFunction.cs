@@ -9,7 +9,7 @@ namespace azTimeTriggeredFunc
     public static class MyTimerFunction
     {
         [FunctionName("MyTimerFunction")]
-        public static void Run([TimerTrigger("*/5 * * * * *")]TimerInfo myTimer, ILogger log)
+        public static void Run([TimerTrigger("0 */5 * * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             using var scope = HostBuilderFactory.Host.Services.CreateScope();
